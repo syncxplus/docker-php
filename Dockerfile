@@ -1,6 +1,6 @@
-FROM php:5.6.31-apache
+FROM php:5.6.33-apache-jessie
 
-MAINTAINER Bo Ji <jibo@outlook.com>
+LABEL maintainer="jibo@outlook.com"
 
 RUN apt-get update
 
@@ -64,10 +64,11 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 
 # composer
 # https://getcomposer.org/download/
-COPY composer-1.4.3.phar /usr/local/bin/composer
+COPY composer-1.6.2.phar /usr/local/bin/composer
 
 # enable apache rewrite
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
-# timezone
+# localization
+ENV LANG C.UTF-8
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
