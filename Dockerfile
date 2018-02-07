@@ -1,4 +1,4 @@
-FROM php:7.1.13-apache-jessie
+FROM php:7.1.14-apache-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -75,8 +75,8 @@ RUN cd redis-3.1.6 \
 
 # xdebug
 # https://pecl.php.net/package/xdebug
-ADD xdebug-2.5.5.tgz .
-RUN cd xdebug-2.5.5 \
+ADD xdebug-2.6.0.tgz .
+RUN cd xdebug-2.6.0 \
     && phpize && ./configure \
     && make && make install && make clean \
     && cd .. && rm -rf *
@@ -85,9 +85,10 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 
 # composer
 # https://getcomposer.org/download/
-COPY composer-1.6.2.phar /usr/local/bin/composer
+COPY composer-1.6.3.phar /usr/local/bin/composer
 
-# enable apache rewrite
+# apache
+COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
 # localization
