@@ -1,4 +1,4 @@
-FROM php:7.1.14-apache-jessie
+FROM php:7.1.14-fpm-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -9,7 +9,6 @@ RUN apt-get -qqy --no-install-recommends install ttf-wqy-microhei
 
 # install libs
 RUN apt-get install -qqy --no-install-recommends \
-    apache2-dev \
     ImageMagick \
     libmagick++-dev \
     libmagickcore-dev \
@@ -17,9 +16,13 @@ RUN apt-get install -qqy --no-install-recommends \
     libjpeg62-turbo-dev \
     libpng12-dev \
     libssl-dev \
+    nginx \
     vim \
     wget \
     zip unzip
+
+# nginx
+COPY default /etc/nginx/sites-available/default
 
 # freetds
 # ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
@@ -87,13 +90,11 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 # https://getcomposer.org/download/
 COPY composer-1.6.3.phar /usr/local/bin/composer
 
-# apache
-COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
-RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
-
 # localization
 ENV LANG C.UTF-8
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
 # entry
 COPY docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
+CMD ['docker-php-entrypoint']
+EXPOSE 80
