@@ -88,8 +88,12 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 COPY composer-1.6.3.phar /usr/local/bin/composer
 
 # apache
-COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
+COPY mod_xsendfile.c /var/www/html/mod_xsendfile.c
+RUN apxs -cia mod_xsendfile.c && rm mod_xsendfile.c
+COPY .htaccess /var/www/html/.htaccess
+COPY site.conf /etc/apache2/sites-available/000-default.conf
+COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
 
 # localization
 ENV LANG C.UTF-8
