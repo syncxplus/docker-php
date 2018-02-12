@@ -95,3 +95,6 @@ RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rew
 # localization
 ENV LANG C.UTF-8
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+
+# entry
+COPY docker-php-entrypoint /usr/local/bin/docker-php-entrypoint
