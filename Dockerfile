@@ -10,6 +10,7 @@ RUN apt-get -qqy --no-install-recommends install ttf-wqy-microhei
 # install libs
 RUN apt-get install -qqy --no-install-recommends \
     apache2-dev \
+    git \
     ImageMagick \
     libmagick++-dev \
     libmagickcore-dev \
