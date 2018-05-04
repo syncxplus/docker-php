@@ -1,4 +1,4 @@
-FROM php:7.1.16-apache-jessie
+FROM php:7.2.5-apache-stretch
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -11,12 +11,9 @@ RUN apt-get -qqy --no-install-recommends install ttf-wqy-microhei
 RUN apt-get install -qqy --no-install-recommends \
     apache2-dev \
     git \
-    ImageMagick \
-    libmagick++-dev \
-    libmagickcore-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    libpng12-dev \
+    libpng-dev \
     libssl-dev \
     vim \
     wget \
@@ -48,14 +45,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         pdo_mysql \
         pdo_dblib \
         zip
-
-# imagick
-# https://pecl.php.net/package/imagick
-ADD imagick-3.4.3.tgz .
-RUN cd imagick-3.4.3 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
 
 # memcache
 # https://github.com/websupport-sk/pecl-memcache/tree/php7
