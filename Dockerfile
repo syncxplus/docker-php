@@ -1,4 +1,4 @@
-FROM php:7.1.16-apache-jessie
+FROM php:7.1.17-apache-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -86,7 +86,7 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 
 # composer
 # https://getcomposer.org/download/
-COPY composer-1.6.3.phar /usr/local/bin/composer
+COPY composer-1.6.5.phar /usr/local/bin/composer
 
 # apache
 COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
