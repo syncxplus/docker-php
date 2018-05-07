@@ -1,4 +1,4 @@
-FROM php:5.6.33-apache-jessie
+FROM php:5.6.36-apache-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -64,7 +64,7 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 
 # composer
 # https://getcomposer.org/download/
-COPY composer-1.6.2.phar /usr/local/bin/composer
+COPY composer-1.6.5.phar /usr/local/bin/composer
 
 # enable apache rewrite
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
