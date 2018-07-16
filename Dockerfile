@@ -1,4 +1,4 @@
-FROM php:7.1.17-apache-jessie
+FROM php:7.1.19-apache-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -29,7 +29,7 @@ RUN apt-get install -qqy --no-install-recommends \
 # Setting TDS version to 0 for the experimental auto-protocol feature
 ENV TDSVER 0
 ADD freetds-patched.tar.gz .
-RUN cd freetds-1.00.86 \
+RUN cd freetds-1.00.92 \
     && ./configure --prefix=/usr/local \
     && make && make install && make clean \
     && cd .. && rm -rf *
