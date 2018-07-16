@@ -1,4 +1,4 @@
-FROM php:7.2.5-apache-stretch
+FROM php:7.2.7-apache-stretch
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -26,7 +26,7 @@ RUN apt-get install -qqy --no-install-recommends \
 # Setting TDS version to 0 for the experimental auto-protocol feature
 ENV TDSVER 0
 ADD freetds-patched.tar.gz .
-RUN cd freetds-1.00.86 \
+RUN cd freetds-1.00.92 \
     && ./configure --prefix=/usr/local \
     && make && make install && make clean \
     && cd .. && rm -rf *
@@ -75,7 +75,7 @@ COPY php.ini-production /usr/local/etc/php/php.ini
 
 # composer
 # https://getcomposer.org/download/
-COPY composer-1.6.3.phar /usr/local/bin/composer
+COPY composer-1.6.5.phar /usr/local/bin/composer
 
 # apache
 COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
