@@ -1,4 +1,4 @@
-FROM php:5.6.36-apache-jessie
+FROM php:5.6.37-apache-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
