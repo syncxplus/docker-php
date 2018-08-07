@@ -4,11 +4,8 @@ LABEL maintainer="jibo@outlook.com"
 
 RUN apt-get update
 
-# install font WenQuanYi-Micro-Hei
-RUN apt-get -qqy --no-install-recommends install ttf-wqy-microhei
-
 # install libs
-RUN apt-get install -qqy --no-install-recommends \
+RUN apt-get install -qqy --allow-unauthenticated --no-install-recommends \
     apache2-dev \
     git \
     libfreetype6-dev \
@@ -18,6 +15,9 @@ RUN apt-get install -qqy --no-install-recommends \
     vim \
     wget \
     zip unzip
+
+# install graphicsmagick with recommands
+RUN apt-get install -qqy --allow-unauthenticated graphicsmagick libgraphicsmagick1-dev
 
 # freetds
 # ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
@@ -46,6 +46,14 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         pdo_dblib \
         zip
 
+# gmagick
+# https://pecl.php.net/package/gmagick
+ADD gmagick-2.0.5RC1.tgz .
+RUN cd gmagick-2.0.5RC1 \
+    && phpize && ./configure \
+    && make && make install && make clean \
+    && cd .. && rm -rf *
+
 # memcache
 # https://github.com/websupport-sk/pecl-memcache/tree/php7
 # commit: beff63f
@@ -65,8 +73,8 @@ RUN cd redis-3.1.6 \
 
 # xdebug
 # https://pecl.php.net/package/xdebug
-ADD xdebug-2.6.0.tgz .
-RUN cd xdebug-2.6.0 \
+ADD xdebug-2.6.1.tgz .
+RUN cd xdebug-2.6.1 \
     && phpize && ./configure \
     && make && make install && make clean \
     && cd .. && rm -rf *
@@ -85,4 +93,10 @@ RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rew
 ENV LANG C.UTF-8
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
-RUN chown -R www-data:www-data /var/www
+# sample
+ADD http://qiniu.syncxplus.com/logo/testbird.png /var/font/
+COPY imagick_type_gen /var/font/
+COPY add_font_sample.sh /var/font/
+RUN /var/font/add_font_sample.sh
+COPY info.php /var/www/html/
+COPY gm.php /var/www/html/

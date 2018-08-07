@@ -1910,6 +1910,7 @@ ldap.max_links = -1
 ; tab-width: 4
 ; End:
 
+extension=gmagick.so
 extension=memcache.so
 extension=redis.so
 
