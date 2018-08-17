@@ -12,6 +12,7 @@ RUN apt-get install -qqy --allow-unauthenticated --no-install-recommends \
     libjpeg62-turbo-dev \
     libpng-dev \
     libssl-dev \
+    locales \
     vim \
     wget \
     zip unzip
@@ -90,8 +91,11 @@ COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
 # localization
-ENV LANG C.UTF-8
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/1' /etc/locale.gen \
+    && locale-gen \
+    && export LANG=zh_CN.UTF-8
 
 # sample
 ADD http://qiniu.syncxplus.com/logo/testbird.png /var/font/
