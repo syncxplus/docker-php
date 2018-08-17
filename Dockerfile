@@ -2,10 +2,8 @@ FROM php:7.2.8-apache-stretch
 
 LABEL maintainer="jibo@outlook.com"
 
-RUN apt-get update
-
 # install libs
-RUN apt-get install -qqy --allow-unauthenticated --no-install-recommends \
+RUN apt-get update && apt-get install -y --allow-unauthenticated --no-install-recommends \
     apache2-dev \
     git \
     libfreetype6-dev \
@@ -15,10 +13,14 @@ RUN apt-get install -qqy --allow-unauthenticated --no-install-recommends \
     locales \
     vim \
     wget \
-    zip unzip
+    zip unzip \
+    && apt-get clean && rm -r /var/lib/apt/lists/*
 
 # install graphicsmagick with recommands
-RUN apt-get install -qqy --allow-unauthenticated graphicsmagick libgraphicsmagick1-dev
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
+    graphicsmagick \
+    libgraphicsmagick1-dev \
+    && apt-get clean && rm -r /var/lib/apt/lists/*
 
 # freetds
 # ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
@@ -33,54 +35,23 @@ RUN cd freetds-1.00.94 \
     && cd .. && rm -rf *
 COPY freetds.conf /usr/local/etc/freetds.conf
 
-# install ext within official image
+# install ext
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-configure pdo_dblib --with-pdo-dblib=/usr/local \
     && docker-php-ext-install \
-        gd \
         bcmath \
-        mbstring \
+        gd \
         mysqli \
         opcache \
         pcntl \
         pdo_mysql \
         pdo_dblib \
-        zip
-
-# gmagick
-# https://pecl.php.net/package/gmagick
-ADD gmagick-2.0.5RC1.tgz .
-RUN cd gmagick-2.0.5RC1 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
-
-# memcache
-# https://github.com/websupport-sk/pecl-memcache/tree/php7
-# commit: beff63f
-ADD pecl-memcache-php7.tgz .
-RUN cd pecl-memcache-php7 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
-
-# redis
-# https://pecl.php.net/package/redis
-ADD redis-3.1.6.tgz .
-RUN cd redis-3.1.6 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
-
-# xdebug
-# https://pecl.php.net/package/xdebug
-ADD xdebug-2.6.1.tgz .
-RUN cd xdebug-2.6.1 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
+        zip \
+    && pecl install gmagick-2.0.5RC1 \
+    && pecl install xdebug-2.6.1
 
 COPY php.ini-production /usr/local/etc/php/php.ini
+COPY docker-php-ext-gmagick.ini /usr/local/etc/php/conf.d/
 
 # composer
 # https://getcomposer.org/download/
