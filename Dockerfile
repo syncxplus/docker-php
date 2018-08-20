@@ -45,9 +45,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     && pecl install gmagick-2.0.5RC1 \
     && pecl install xdebug
 
-
 COPY docker-php-ext-gmagick.ini /usr/local/etc/php/conf.d/
-COPY php.ini-production /usr/local/etc/php/php.ini
+COPY php.ini /usr/local/etc/php/php.ini
 
 # composer
 # https://getcomposer.org/download/
