@@ -1,4 +1,4 @@
-FROM php:7.2.8-apache-stretch
+FROM php:7.2.9-apache-stretch
 
 LABEL maintainer="jibo@outlook.com"
 
@@ -55,7 +55,7 @@ RUN curl -o composer-setup.php -L https://getcomposer.org/installer \
     && rm -rf *
 
 # apache
-COPY mpm_prefork_default.conf /etc/apache2/mods-available/mpm_prefork.conf
+COPY mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
 # localizationx
