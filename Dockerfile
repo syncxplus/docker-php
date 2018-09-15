@@ -1,4 +1,4 @@
-FROM php:7.2.9-apache-stretch
+FROM php:7.2.10-apache-stretch
 
 LABEL maintainer="jibo@outlook.com"
 
