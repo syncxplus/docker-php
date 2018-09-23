@@ -1,15 +1,11 @@
-FROM php:5.6.37-apache-jessie
+FROM php:5.6.38-apache-jessie
 
 LABEL maintainer="jibo@outlook.com"
 
 RUN apt-get update
 
-# install font WenQuanYi-Micro-Hei
-RUN apt-get -qqy --no-install-recommends install ttf-wqy-microhei
-
 # install libs
 RUN apt-get install -qqy --no-install-recommends \
-    curl \
     ImageMagick \
     libmagick++-dev \
     libmagickcore-dev \
@@ -18,11 +14,11 @@ RUN apt-get install -qqy --no-install-recommends \
     libmcrypt-dev \
     libpng12-dev \
     libssl-dev \
+    locales \
     vim \
-    wget \
     zip unzip
 
-# install ext within official image
+# install ext
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
         gd \
@@ -34,41 +30,30 @@ RUN docker-php-ext-install \
         opcache \
         pcntl \
         pdo_mysql \
-        zip
+        zip \
+    && pecl install imagick-3.4.3 \
+    && pecl install memcache-2.2.7 \
+    && pecl install xdebug-2.5.5
 
-# imagick
-# https://pecl.php.net/package/imagick
-ADD imagick-3.4.3.tgz .
-RUN cd imagick-3.4.3 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
-
-# memcache
-# https://pecl.php.net/package/memcache
-ADD memcache-2.2.7.tgz .
-RUN cd memcache-2.2.7 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
-
-# xdebug
-# https://pecl.php.net/package/xdebug
-ADD xdebug-2.5.5.tgz .
-RUN cd xdebug-2.5.5 \
-    && phpize && ./configure \
-    && make && make install && make clean \
-    && cd .. && rm -rf *
-
-COPY php.ini-production /usr/local/etc/php/php.ini
+COPY php.ini /usr/local/etc/php/php.ini
+COPY docker-php-ext-imagick.ini docker-php-ext-memcache.ini /usr/local/etc/php/conf.d/
 
 # composer
 # https://getcomposer.org/download/
-COPY composer-1.6.5.phar /usr/local/bin/composer
+RUN curl -o composer-setup.php -L https://getcomposer.org/installer \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && rm -rf *
 
-# enable apache rewrite
+# apache
+COPY mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
 # localization
-ENV LANG C.UTF-8
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/1' /etc/locale.gen \
+    && locale-gen
+ENV LANG zh_CN.UTF-8
+
+# sample
+COPY info.php /var/www/html/
