@@ -45,8 +45,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     && pecl install gmagick-2.0.5RC1 \
     && pecl install xdebug
 
-COPY docker-php-ext-gmagick.ini /usr/local/etc/php/conf.d/
 COPY php.ini /usr/local/etc/php/php.ini
+COPY docker-php-ext-gmagick.ini /usr/local/etc/php/conf.d/
 
 # composer
 # https://getcomposer.org/download/
@@ -58,7 +58,7 @@ RUN curl -o composer-setup.php -L https://getcomposer.org/installer \
 COPY mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 
-# localizationx
+# localization
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/1' /etc/locale.gen \
