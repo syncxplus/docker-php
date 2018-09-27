@@ -1,28 +1,27 @@
-FROM php:5.6.38-apache-jessie
+FROM php:5.6.38-apache-stretch
 
 LABEL maintainer="jibo@outlook.com"
 
-RUN apt-get update
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
+    graphicsmagick \
+    libgraphicsmagick1-dev \
+    && apt-get clean && rm -r /var/lib/apt/lists/*
 
-# install libs
-RUN apt-get install -qqy --no-install-recommends \
-    ImageMagick \
-    libmagick++-dev \
-    libmagickcore-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libmcrypt-dev \
-    libpng12-dev \
+RUN apt-get update && apt-get install -y --allow-unauthenticated --no-install-recommends \
+    apache2-dev \
+    git \
     libssl-dev \
+    libmcrypt-dev \
     locales \
     vim \
-    zip unzip
+    zip unzip \
+    && apt-get clean && rm -r /var/lib/apt/lists/*
 
 # install ext
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
-        gd \
         bcmath \
+        gd \
         mbstring \
         mcrypt \
         mysql \
@@ -31,12 +30,12 @@ RUN docker-php-ext-install \
         pcntl \
         pdo_mysql \
         zip \
-    && pecl install imagick-3.4.3 \
+    && pecl install gmagick-1.1.7RC3 \
     && pecl install memcache-2.2.7 \
     && pecl install xdebug-2.5.5
 
 COPY php.ini /usr/local/etc/php/php.ini
-COPY docker-php-ext-imagick.ini docker-php-ext-memcache.ini /usr/local/etc/php/conf.d/
+COPY docker-php-ext-gmagick.ini docker-php-ext-memcache.ini /usr/local/etc/php/conf.d/
 
 # composer
 # https://getcomposer.org/download/
@@ -56,4 +55,5 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 ENV LANG zh_CN.UTF-8
 
 # sample
-COPY info.php /var/www/html/
+COPY add_font_sample.sh gm.php info.php /var/www/html/
+RUN ./add_font_sample.sh && rm -f add_font_sample.sh && chown -R www-data:www-data /var/www/html
