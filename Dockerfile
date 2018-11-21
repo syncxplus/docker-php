@@ -43,10 +43,11 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         pdo_dblib \
         zip \
     && pecl install gmagick-2.0.5RC1 \
+    && pecl install redis \
     && pecl install xdebug
 
 COPY php.ini /usr/local/etc/php/php.ini
-COPY docker-php-ext-gmagick.ini /usr/local/etc/php/conf.d/
+COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini /usr/local/etc/php/conf.d/
 
 # composer
 # https://getcomposer.org/download/
