@@ -55,6 +55,13 @@ COPY add_font_sample.sh gm.php info.php ./
 RUN ./add_font_sample.sh && rm -f add_font_sample.sh
 RUN chown -R www-data:www-data ./
 
+# xsendfile
+COPY xsf.php ./
+COPY README.md ./xsf/README.md
+RUN curl -OL https://raw.githubusercontent.com/nmaier/mod_xsendfile/master/mod_xsendfile.c && apxs -cia mod_xsendfile.c && rm mod_xsendfile.c
+
 # apache
+COPY 7.2-apache-stretch/.htaccess ./
+COPY 7.2-apache-stretch/site.conf /etc/apache2/sites-available/000-default.conf
 COPY 7.2-apache-stretch/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
