@@ -19,8 +19,15 @@ try {
     $draw->setfontsize(50);
     $draw->setfillcolor('red');
     $gm = new Gmagick('http://qiniu.syncxplus.com/logo/testbird.png');
-    header('Content-type: image/png');
-    echo $gm->drawimage($draw);
+    $gm->drawimage($draw);
+    if (php_sapi_name() === 'cli') {
+        $path = '/tmp/testbird.png';
+        $gm->writeimage($path);
+        echo $path;
+    } else {
+        header('Content-type:image/png');
+        echo $gm;
+    }
 } catch (Exception $e) {
     var_dump($e);
 }
