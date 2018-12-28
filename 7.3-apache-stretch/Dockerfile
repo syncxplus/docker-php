@@ -68,9 +68,10 @@ RUN chown -R www-data:www-data ./
 # xsendfile
 COPY xsf.php ./
 COPY README.md ./xsf/README.md
-RUN curl -OL https://raw.githubusercontent.com/nmaier/mod_xsendfile/master/mod_xsendfile.c \
+RUN mkdir xsendfile && cd xsendfile \
+ && curl -OL https://raw.githubusercontent.com/nmaier/mod_xsendfile/master/mod_xsendfile.c \
  && apxs -cia mod_xsendfile.c \
- && rm mod_xsendfile.c
+ && cd .. && rm -rf xsendfile
 
 # apache
 COPY 7.3-apache-stretch/.htaccess ./
