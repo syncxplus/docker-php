@@ -47,8 +47,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     pcntl \
     sockets \
  && pecl install gmagick-2.0.5RC1 \
- && pecl install redis \
- && pecl install xdebug-2.7.0beta1
+ && pecl install redis
 
 # config
 COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini /usr/local/etc/php/conf.d/
