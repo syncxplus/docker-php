@@ -2,7 +2,7 @@ FROM php:7.3-apache-stretch
 
 LABEL maintainer=jibo@outlook.com
 
-RUN apt-get update && apt-get install -y --allow-unauthenticated \
+RUN apt-get update && apt-get install --allow-unauthenticated -y \
     apt-utils \
     apache2-dev \
     git \
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --allow-unauthenticated \
     openssl \
     vim \
     libgraphicsmagick1-dev libgraphicsmagick++1-dev graphicsmagick \
+    libyaml-dev \
     libzip-dev zip unzip \
  && apt-get clean && rm -r /var/lib/apt/lists/* \
  && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -47,10 +48,12 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     pcntl \
     sockets \
  && pecl install gmagick-2.0.5RC1 \
- && pecl install redis
+ && pecl install redis \
+ && printf '\n' | pecl install yaml \
+ && rm -rf /tmp/pear
 
 # config
-COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini /usr/local/etc/php/conf.d/
+COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini docker-php-ext-yaml.ini /usr/local/etc/php/conf.d/
 COPY 7.3-apache-stretch/php.ini /usr/local/etc/php/php.ini
 
 # composer
