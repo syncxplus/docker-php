@@ -55,7 +55,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 # config
 COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini docker-php-ext-yaml.ini /usr/local/etc/php/conf.d/
 COPY 7.3-apache-stretch/php.ini /usr/local/etc/php/php.ini
-COPY 7.3-apache-stretch/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 # composer
 # https://getcomposer.org/download/
