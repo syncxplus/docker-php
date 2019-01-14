@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install --allow-unauthenticated -y \
     libzip-dev zip unzip \
  && apt-get clean && rm -r /var/lib/apt/lists/* \
  && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
- && echo "Asia/Shanghai" > /etc/timezone \
+ && echo Asia/Shanghai > /etc/timezone \
  && sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/1' /etc/locale.gen \
  && locale-gen
 
@@ -55,6 +55,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 # config
 COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini docker-php-ext-yaml.ini /usr/local/etc/php/conf.d/
 COPY 7.3-apache-stretch/php.ini /usr/local/etc/php/php.ini
+COPY 7.3-apache-stretch/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 # composer
 # https://getcomposer.org/download/

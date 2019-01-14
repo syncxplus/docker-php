@@ -1,6 +1,6 @@
 FROM php:5.6-apache-stretch
 
-LABEL maintainer='jibo@outlook.com'
+LABEL maintainer=jibo@outlook.com
 
 RUN apt-get update && apt-get install -y --allow-unauthenticated \
      apt-utils apache2-dev git libmcrypt-dev locales openssl vim \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --allow-unauthenticated \
      libzip-dev zip unzip \
   && apt-get clean && rm -r /var/lib/apt/lists/* \
   && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-  && echo "Asia/Shanghai" > /etc/timezone \
+  && echo Asia/Shanghai > /etc/timezone \
   && sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/1' /etc/locale.gen \
   && locale-gen
 
