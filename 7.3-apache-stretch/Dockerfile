@@ -49,6 +49,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     sockets \
  && pecl install gmagick-2.0.5RC1 \
  && pecl install redis \
+ && pecl install xdebug \
  && printf '\n' | pecl install yaml \
  && rm -rf /tmp/pear
 
