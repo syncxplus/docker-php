@@ -7,4 +7,4 @@ sample=`./imagick_type_gen ${PWD}/SourceHanSansSC-Normal.otf|sed -e 's/<typemap>
 sed -i 's/<\/typemap>//1' ${default}
 echo ${sample} >> ${default}
 echo "</typemap>" >> ${default}
-rm -rf imagick_type_gen SourceHanSansSC-Normal.otf
+rm -rf imagick_type_gen
