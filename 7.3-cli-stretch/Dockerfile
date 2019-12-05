@@ -19,24 +19,9 @@ RUN apt-get update && apt-get install --allow-unauthenticated -y \
 
 ENV LANG zh_CN.UTF-8
 
-# freetds
-# ENV: http://www.freetds.org/userguide/envvar.htm
-# TDSVER: http://www.freetds.org/userguide/choosingtdsprotocol.htm
-# Setting TDS version to 0 for the experimental auto-protocol feature
-ENV TDSVER 0
-RUN curl -OL ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz \
- && tar -xzf freetds-patched.tar.gz \
- && cd `ls|grep freetds` \
- && ./configure --prefix=/usr/local \
- && make && make install && make clean \
- && cd .. && rm -rf freetds*
-COPY freetds.conf /usr/local/etc/freetds.conf
-
 # extension
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
  && docker-php-ext-install gd \
- && docker-php-ext-configure pdo_dblib --with-pdo-dblib=/usr/local \
- && docker-php-ext-install pdo_dblib \
  && docker-php-ext-configure zip --with-libzip \
  && docker-php-ext-install zip \
  && docker-php-ext-install \
