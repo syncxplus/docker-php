@@ -5,6 +5,7 @@ LABEL maintainer=jibo@outlook.com
 RUN apt-get update && apt-get install --allow-unauthenticated -y \
     apt-utils \
     apache2-dev \
+    cron \
     git \
     locales \
     openssl \
