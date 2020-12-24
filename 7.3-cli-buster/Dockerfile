@@ -1,10 +1,9 @@
-FROM php:7.3-apache-stretch
+FROM php:7.3-cli-buster
 
 LABEL maintainer=jibo@outlook.com
 
 RUN apt-get update && apt-get install --allow-unauthenticated -y \
     apt-utils \
-    apache2-dev \
     cron \
     git \
     locales \
@@ -40,8 +39,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
  && rm -rf /tmp/pear
 
 # config
-COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini docker-php-ext-yaml.ini /usr/local/etc/php/conf.d/
-COPY 7.3-apache-stretch/php.ini /usr/local/etc/php/php.ini
+COPY docker-php-ext-gmagick.ini docker-php-ext-redis.ini  docker-php-ext-yaml.ini /usr/local/etc/php/conf.d/
 
 # composer
 # https://getcomposer.org/download/
@@ -50,21 +48,6 @@ RUN curl -o composer-setup.php -L https://getcomposer.org/installer \
  && rm -rf composer-setup.php
 
 # font
-WORKDIR /var/www/html
+WORKDIR /data
 COPY add_font_sample.sh gm.php info.php ./
 RUN ./add_font_sample.sh && rm -f add_font_sample.sh
-RUN chown -R www-data:www-data ./
-
-# xsendfile
-COPY xsf.php ./
-COPY README.md ./xsf/README.md
-RUN mkdir xsendfile && cd xsendfile \
- && curl -OL https://raw.githubusercontent.com/nmaier/mod_xsendfile/master/mod_xsendfile.c \
- && apxs -cia mod_xsendfile.c \
- && cd .. && rm -rf xsendfile
-
-# apache
-COPY 7.3-apache-stretch/.htaccess ./
-COPY 7.3-apache-stretch/site.conf /etc/apache2/sites-available/000-default.conf
-COPY 7.3-apache-stretch/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
-RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
