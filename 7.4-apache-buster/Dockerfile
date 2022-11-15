@@ -1,4 +1,4 @@
-FROM php:7.4-apache-buster
+FROM --platform=linux/amd64 php:7.4-apache-buster
 
 LABEL maintainer=jibo@outlook.com
 
